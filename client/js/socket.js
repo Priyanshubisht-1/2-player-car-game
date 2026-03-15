@@ -1,5 +1,5 @@
 // Replace this with your Render server URL after deployment
-const SERVER_URL = "https://your-render-server.onrender.com";
+const SERVER_URL = "https://multiplayer-game-smr5.onrender.com";
 
 // Create socket connection
 const socket = io(SERVER_URL, {
