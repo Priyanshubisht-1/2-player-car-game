@@ -1,0 +1,66 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lobby</title>
+<link rel="stylesheet" href="css/style.css">
+</head><body><div class="container"><h1>Game Lobby</h1><h2>Room ID: <span id="roomId"></span></h2><h3>Players</h3><ul id="playersList"></ul><button id="startBtn" class="btn">Start Game</button>
+
+</div><!-- Socket.IO --><script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script><!-- Socket connection --><script src="js/socket.js"></script><script>
+
+const roomId = localStorage.getItem("roomId");
+const name = localStorage.getItem("playerName");
+
+const roomIdText = document.getElementById("roomId");
+const playersList = document.getElementById("playersList");
+const startBtn = document.getElementById("startBtn");
+
+roomIdText.textContent = roomId;
+
+// hide start button initially
+startBtn.style.display = "none";
+
+// request lobby state
+socket.emit("joinRoom", {name, roomId}, ()=>{});
+
+// update lobby
+socket.on("updateLobby", (data)=>{
+
+playersList.innerHTML = "";
+
+data.players.forEach(player => {
+
+const li = document.createElement("li");
+
+if(player.id === data.host){
+li.textContent = "👑 " + player.name;
+}else{
+li.textContent = player.name;
+}
+
+playersList.appendChild(li);
+
+if(socket.id === data.host){
+startBtn.style.display = "block";
+}
+
+});
+
+});
+
+// start game
+startBtn.addEventListener("click", ()=>{
+
+socket.emit("startGame", roomId);
+
+});
+
+// game started
+socket.on("gameStarted", (players)=>{
+
+window.location.href = "game.html";
+
+});
+
+</script></body>
+</html>

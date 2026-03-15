@@ -1,0 +1,48 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Room</title>
+<link rel="stylesheet" href="css/style.css">
+</head><body><div class="container"><h1>Create Room</h1><div class="form"><input 
+type="text" 
+id="nameInput" 
+placeholder="Enter your name"
+required
+/>
+
+<button id="createBtn" class="btn">
+Create Room
+</button></div><p id="error" class="error"></p></div><!-- Socket.IO --><script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script><!-- Socket Connection --><script src="js/socket.js"></script><script>
+
+const createBtn = document.getElementById("createBtn");
+const nameInput = document.getElementById("nameInput");
+const errorText = document.getElementById("error");
+
+createBtn.addEventListener("click", () => {
+
+const name = nameInput.value.trim();
+
+if(!name){
+errorText.textContent = "Please enter your name";
+return;
+}
+
+socket.emit("createRoom", name, (data)=>{
+
+if(data.error){
+errorText.textContent = data.error;
+return;
+}
+
+localStorage.setItem("playerName", name);
+localStorage.setItem("roomId", data.roomId);
+
+window.location.href = "lobby.html";
+
+});
+
+});
+
+</script></body>
+</html>
